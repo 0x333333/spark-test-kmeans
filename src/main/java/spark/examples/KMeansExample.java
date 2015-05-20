@@ -10,14 +10,17 @@ import org.apache.spark.SparkConf;
 
 public class KMeansExample {
   public static void main(String[] args) {
-    SparkConf conf = new SparkConf().setAppName("K-means Example")
-                .set("spark.executor.memory", "16M")
-                .set("spark.rdd.compress", "false");
+
+    if (args.length < 1) {
+      System.err.println("Usage: JavaWordCount <file>");
+      System.exit(1);
+    }
+
+    SparkConf conf = new SparkConf().setAppName("K-means Example");
     JavaSparkContext sc = new JavaSparkContext(conf);
 
     // Load and parse data
-    String path = "kmeans_data.txt";
-    JavaRDD<String> data = sc.textFile(path);
+    JavaRDD<String> data = sc.textFile(args[0]);
     JavaRDD<Vector> parsedData = data.map(
       new Function<String, Vector>() {
         public Vector call(String s) {
