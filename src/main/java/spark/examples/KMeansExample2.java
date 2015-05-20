@@ -8,11 +8,12 @@ import org.apache.spark.mllib.linalg.Vector;
 import org.apache.spark.mllib.linalg.Vectors;
 import org.apache.spark.SparkConf;
 
-public class KMeansExample {
+public class KMeansExample2 {
   public static void main(String[] args) {
     SparkConf conf = new SparkConf().setAppName("K-means Example")
                 .set("spark.executor.memory", "16M")
-                .set("spark.rdd.compress", "false");
+                .set("spark.rdd.compress", "true")
+                .set("spark.io.compression.codec", "lz4");
     JavaSparkContext sc = new JavaSparkContext(conf);
 
     // Load and parse data
