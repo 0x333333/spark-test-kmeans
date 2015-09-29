@@ -7,20 +7,18 @@ import org.apache.spark.mllib.clustering.KMeansModel;
 import org.apache.spark.mllib.linalg.Vector;
 import org.apache.spark.mllib.linalg.Vectors;
 import org.apache.spark.SparkConf;
+import org.apache.spark.storage.StorageLevel;
 
 public class KMeansExample {
   public static void main(String[] args) {
-
-    if (args.length < 1) {
-      System.err.println("Usage: JavaWordCount <file>");
-      System.exit(1);
-    }
-
-    SparkConf conf = new SparkConf().setAppName("K-means Example");
+    SparkConf conf = new SparkConf().setAppName("K-means Example")
+                .set("spark.executor.memory", "32M")
+                .set("spark.rdd.compress", "false");
     JavaSparkContext sc = new JavaSparkContext(conf);
 
     // Load and parse data
-    JavaRDD<String> data = sc.textFile(args[0]);
+    String path = "kmeans_data.txt";
+    JavaRDD<String> data = sc.textFile(path);
     JavaRDD<Vector> parsedData = data.map(
       new Function<String, Vector>() {
         public Vector call(String s) {
@@ -32,7 +30,7 @@ public class KMeansExample {
         }
       }
     );
-    parsedData.cache();
+    parsedData.persist(StorageLevel.MEMORY_ONLY());
 
     System.out.println("\n\n\n\n");
     long startTime = System.nanoTime();

@@ -7,11 +7,12 @@ import org.apache.spark.mllib.clustering.KMeansModel;
 import org.apache.spark.mllib.linalg.Vector;
 import org.apache.spark.mllib.linalg.Vectors;
 import org.apache.spark.SparkConf;
+import org.apache.spark.storage.StorageLevel;
 
 public class KMeansExample2 {
   public static void main(String[] args) {
     SparkConf conf = new SparkConf().setAppName("K-means Example")
-                .set("spark.executor.memory", "16M")
+                .set("spark.executor.memory", "32M")
                 .set("spark.rdd.compress", "true")
                 .set("spark.io.compression.codec", "lz4");
     JavaSparkContext sc = new JavaSparkContext(conf);
@@ -30,7 +31,7 @@ public class KMeansExample2 {
         }
       }
     );
-    parsedData.cache();
+    parsedData.persist(StorageLevel.MEMORY_ONLY());
 
     System.out.println("\n\n\n\n");
     long startTime = System.nanoTime();
